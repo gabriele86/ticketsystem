@@ -3,6 +3,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,9 +42,21 @@ class User extends BaseUser
      */
     protected $device_token;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="owner")
+     */
+    private $ticket;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TicketComment", mappedBy="author")
+     */
+    private $comments;
+
     public function __construct()
     {
         parent::__construct();
+        $this->ticket = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     /**
@@ -115,6 +129,68 @@ class User extends BaseUser
     public function setSendSms($send_sms): void
     {
         $this->send_sms = $send_sms;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getTicket(): Collection
+    {
+        return $this->created_at;
+    }
+
+    public function addTicket(Ticket $createdAt): self
+    {
+        if (!$this->created_at->contains($createdAt)) {
+            $this->created_at[] = $createdAt;
+            $createdAt->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $createdAt): self
+    {
+        if ($this->created_at->contains($createdAt)) {
+            $this->created_at->removeElement($createdAt);
+            // set the owning side to null (unless already changed)
+            if ($createdAt->getOwner() === $this) {
+                $createdAt->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TicketComment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(TicketComment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(TicketComment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAuthor() === $this) {
+                $comment->setAuthor(null);
+            }
+        }
+
+        return $this;
     }
 
 }
