@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Enum\TicketStatusEnum;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
@@ -27,10 +28,12 @@ class Ticket
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="created_at")
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="owner")
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
+
+
 
     /**
      * @ORM\Column(type="datetime")
@@ -41,6 +44,16 @@ class Ticket
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $status ;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="assigned_tickets")
+     */
+    private $assignee;
 
     public function getId(): ?int
     {
@@ -103,6 +116,36 @@ class Ticket
     public function setUpdatedAt(?\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+
+        if (!in_array($status, TicketStatusEnum::getAvailableTypes())) {
+            throw new \InvalidArgumentException("Invalid type");
+        }
+
+        $this->status = $status;
+
+        return $this;
+
+    }
+
+    public function getAssignee(): ?User
+    {
+        return $this->assignee;
+    }
+
+    public function setAssignee(?User $assignee): self
+    {
+        $this->assignee = $assignee;
 
         return $this;
     }

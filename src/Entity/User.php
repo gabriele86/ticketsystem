@@ -52,11 +52,17 @@ class User extends BaseUser
      */
     private $comments;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Ticket", mappedBy="assignee")
+     */
+    private $assigned_tickets;
+
     public function __construct()
     {
         parent::__construct();
         $this->ticket = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->assigned_tickets = new ArrayCollection();
     }
 
     /**
@@ -187,6 +193,37 @@ class User extends BaseUser
             // set the owning side to null (unless already changed)
             if ($comment->getAuthor() === $this) {
                 $comment->setAuthor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getAssignedTickets(): Collection
+    {
+        return $this->assigned_tickets;
+    }
+
+    public function addAssignedTicket(Ticket $assignedTicket): self
+    {
+        if (!$this->assigned_tickets->contains($assignedTicket)) {
+            $this->assigned_tickets[] = $assignedTicket;
+            $assignedTicket->setAssignee($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssignedTicket(Ticket $assignedTicket): self
+    {
+        if ($this->assigned_tickets->contains($assignedTicket)) {
+            $this->assigned_tickets->removeElement($assignedTicket);
+            // set the owning side to null (unless already changed)
+            if ($assignedTicket->getAssignee() === $this) {
+                $assignedTicket->setAssignee(null);
             }
         }
 
