@@ -22,17 +22,17 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":0})
      */
     protected $send_push;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", options={"default":FALSE})
      */
     protected $send_sms;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string")
      */
     protected $mobile;
 
@@ -84,7 +84,7 @@ class User extends BaseUser
     /**
      * @return mixed
      */
-    public function getMobile()
+    public function getMobile() : string
     {
         return $this->mobile;
     }
@@ -108,33 +108,30 @@ class User extends BaseUser
     /**
      * @param mixed $device_token
      */
-    public function setDeviceToken($device_token): void
+    public function setDeviceToken($device_token): self
     {
         $this->device_token = $device_token;
+        return $this;
     }
 
-    /**
-     * @param mixed $mobile
-     */
-    public function setMobile($mobile): void
+
+    public function setMobile($mobile): self
     {
         $this->mobile = $mobile;
+        return $this;
     }
 
-    /**
-     * @param mixed $send_push
-     */
-    public function setSendPush($send_push): void
+    public function setSendPush($send_push): self
     {
         $this->send_push = $send_push;
+        return $this;
     }
 
-    /**
-     * @param mixed $send_sms
-     */
-    public function setSendSms($send_sms): void
+
+    public function setSendSms($send_sms): self
     {
         $this->send_sms = $send_sms;
+        return $this;
     }
 
     /**
@@ -142,26 +139,26 @@ class User extends BaseUser
      */
     public function getTicket(): Collection
     {
-        return $this->created_at;
+        return $this->ticket;
     }
 
-    public function addTicket(Ticket $createdAt): self
+    public function setTicket(Ticket $ticket): self
     {
-        if (!$this->created_at->contains($createdAt)) {
-            $this->created_at[] = $createdAt;
-            $createdAt->setOwner($this);
+        if (!$this->ticket->contains($ticket)) {
+            $this->ticket[] = $ticket;
+            $ticket->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeTicket(Ticket $createdAt): self
+    public function removeTicket(Ticket $ticket): self
     {
-        if ($this->created_at->contains($createdAt)) {
-            $this->created_at->removeElement($createdAt);
+        if ($this->ticket->contains($ticket)) {
+            $this->ticket->removeElement($ticket);
             // set the owning side to null (unless already changed)
-            if ($createdAt->getOwner() === $this) {
-                $createdAt->setOwner(null);
+            if ($ticket->getOwner() === $this) {
+                $ticket->setOwner(null);
             }
         }
 

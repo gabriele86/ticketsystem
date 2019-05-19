@@ -29,7 +29,7 @@ class Ticket
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="owner")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="ticket_owner", referencedColumnName="id", nullable=false)
      */
     private $owner;
 
@@ -52,6 +52,7 @@ class Ticket
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="assigned_tickets")
+     * @ORM\JoinColumn(name="assigned_tickets", referencedColumnName="id", nullable=true)
      */
     private $assignee;
 
