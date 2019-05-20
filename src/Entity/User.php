@@ -9,7 +9,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\Table(name="users")
  */
 class User extends BaseUser
@@ -22,23 +22,23 @@ class User extends BaseUser
     protected $id;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":0})
+     * @ORM\Column(type="boolean", options={"default":0}, nullable=true)
      */
     protected $send_push;
 
     /**
-     * @ORM\Column(type="boolean", options={"default":FALSE})
+     * @ORM\Column(type="boolean", options={"default":FALSE}, nullable=true)
      */
     protected $send_sms;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $mobile;
 
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      */
     protected $device_token;
 
@@ -66,41 +66,41 @@ class User extends BaseUser
     }
 
     /**
-     * @return String
+     * @return String|null
      */
-    public function getDeviceToken() : String
+    public function getDeviceToken() : ?String
     {
         return $this->device_token;
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->id;
     }
 
     /**
-     * @return mixed
+     * @return string|null
      */
-    public function getMobile() : string
+    public function getMobile() : ?string
     {
         return $this->mobile;
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getSendPush()
+    public function getSendPush() : ?bool
     {
         return $this->send_push;
     }
 
     /**
-     * @return mixed
+     * @return bool|null
      */
-    public function getSendSms()
+    public function getSendSms() : ?bool
     {
         return $this->send_sms;
     }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use App\Contracts\ITicketRepository;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -12,7 +13,7 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  * @method Ticket[]    findAll()
  * @method Ticket[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TicketRepository extends ServiceEntityRepository
+class TicketRepository extends ServiceEntityRepository implements ITicketRepository
 {
     public function __construct(RegistryInterface $registry)
     {
@@ -47,4 +48,24 @@ class TicketRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function createTicket()
+    {
+        // TODO: Implement createTicket() method.
+    }
+
+    public function assignTicket()
+    {
+        // TODO: Implement assignTicket() method.
+    }
+
+    public function closeTicket()
+    {
+        // TODO: Implement closeTicket() method.
+    }
+
+    public function countComments()
+    {
+        // TODO: Implement countComments() method.
+    }
 }

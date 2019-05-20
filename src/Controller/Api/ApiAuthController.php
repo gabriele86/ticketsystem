@@ -1,62 +1,45 @@
 <?php
 namespace App\Controller\Api;
-use FOS\UserBundle\Model\UserManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Services\UserService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Entity\User;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Validation;
-use Symfony\Component\Validator\Constraints as Assert;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use App\Form\UserType;
 /**
  * @Route("/auth")
  */
-class ApiAuthController extends AbstractController
+class ApiAuthController extends AbstractFOSRestController
 {
+    private $userService;
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * @Route("/register", name="api_auth_register",  methods={"POST"})
      * @param Request $request
-     * @param UserManagerInterface $userManager
-     * @return JsonResponse|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return JsonResponse
      */
-    public function register(Request $request, UserManagerInterface $userManager)
+    public function register(Request $request)
     {
         $data = json_decode(
             $request->getContent(),
             true
         );
-       /* $validator = Validation::createValidator();
-        $constraint = new Assert\Collection(array(
-            // the keys correspond to the keys in the input array
-            'username' => new Assert\Length(array('min' => 1)),
-            'password' => new Assert\Length(array('min' => 1)),
-            'email' => new Assert\Email(),
-        ));
-        $violations = $validator->validate($data, $constraint);
-        if ($violations->count() > 0) {
-            return new JsonResponse(["error" => (string)$violations], 500);
-        }*/
-        $user = new User();
-        $user
-            ->setUsername($data['username'])
-            ->setPlainPassword($data['password'])
-            ->setEmail($data['email'])
-            ->setEnabled(true)
-            ->setRoles(['ROLE_USER'])
-            ->setSendPush(true)
-            ->setSendSms(false)
-            ->setMobile(34)->setDeviceToken("gg")
-        ;
-        try {
-            $userManager->updateUser($user, true);
-        } catch (\Exception $e) {
-            return new JsonResponse(["error" => $e->getMessage()], 500);
-        }
-        # Code 307 preserves the request method, while redirectToRoute() is a shortcut method.
-        return $this->redirectToRoute('api_auth_login', [
-            'username' => $data['username'],
-            'password' => $data['password']
-        ], 307);
+
+        $form = $this->createForm(UserType::class, new User());
+
+        $form->submit($data);
+
+
+        $this->userService->saveOrUpdate($form->getData());
+
+        return JsonResponse::create($form->getData(),Response::HTTP_CREATED);
+
+
     }
 }
