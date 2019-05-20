@@ -121,15 +121,15 @@ class Ticket
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?string
     {
-        return $this->status;
+        return TicketStatusEnum::getStatusName($this->status);
     }
 
     public function setStatus(int $status): self
     {
 
-        if (!in_array($status, TicketStatusEnum::getAvailableTypes())) {
+        if (!in_array($status, TicketStatusEnum::getAvailableStatus())) {
             throw new \InvalidArgumentException("Invalid type");
         }
 
