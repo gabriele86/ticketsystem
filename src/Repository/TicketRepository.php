@@ -6,6 +6,7 @@ use App\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use App\Contracts\ITicketRepository;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * @method Ticket|null find($id, $lockMode = null, $lockVersion = null)
@@ -49,22 +50,30 @@ class TicketRepository extends ServiceEntityRepository implements ITicketReposit
     }
     */
 
-    public function createTicket()
+    public function createTicket(Ticket $ticket) : Ticket
     {
-        // TODO: Implement createTicket() method.
+        $this->_em->persist($ticket);
+        $this->_em->flush();
+
+        return $ticket;
+
     }
 
-    public function assignTicket()
+
+
+    public function assignTicket(Ticket $ticket , $asignee_id  ) : void
     {
-        // TODO: Implement assignTicket() method.
+        $ticket->setAssignee($asignee_id);
+        $this->_em->persist($ticket);
+        $this->_em->flush();
     }
 
-    public function closeTicket()
+    public function closeTicket(Ticket $ticket, $status = 3) : JsonResponse
     {
         // TODO: Implement closeTicket() method.
     }
 
-    public function countComments()
+    public function countComments() : ?int
     {
         // TODO: Implement countComments() method.
     }

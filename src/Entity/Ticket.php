@@ -3,10 +3,11 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+
 use App\Enum\TicketStatusEnum;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\TicketRepository")
+ * @ORM\Entity
  */
 class Ticket
 {
@@ -28,8 +29,8 @@ class Ticket
     private $content;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="owner")
-     * @ORM\JoinColumn(name="ticket_owner", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="owner", cascade={"persist"})
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id", nullable=false)
      */
     private $owner;
 
@@ -51,10 +52,11 @@ class Ticket
     private $status ;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="assigned_tickets")
-     * @ORM\JoinColumn(name="assigned_tickets", referencedColumnName="id", nullable=true)
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="assigned_tickets", cascade={"persist"})
+     * @ORM\JoinColumn(name="assignee", referencedColumnName="id", nullable=true)
      */
     private $assignee;
+
 
     public function getId(): ?int
     {
@@ -102,24 +104,29 @@ class Ticket
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeInterface $created_at): self
+
+    public function setCreatedAt(\DateTime $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updated_at): self
+
+
+    public function setUpdatedAt(\DateTime $updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
     }
+
+
 
     public function getStatus(): ?string
     {

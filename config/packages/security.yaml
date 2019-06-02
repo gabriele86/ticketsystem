@@ -18,8 +18,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
 
-
-        - { path: ^/api/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/auth/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
 
@@ -32,18 +30,11 @@ security:
             pattern:    ^/oauth/v2/token
             security:   false
 
-
-
-
         api_register:
             pattern:  ^/api/auth/register
             stateless: true
             anonymous: true
 
-        api_doc:
-            pattern:  ^/api/doc
-            stateless: true
-            anonymous: true
 
         api:
             pattern:   ^/api
