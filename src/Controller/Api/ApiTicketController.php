@@ -51,7 +51,7 @@ class ApiTicketController extends AbstractFOSRestController
 
         $result = $this->ticketService->create($form->getData(), $user);
 
-        return JsonResponse::create($result->getId(),Response::HTTP_CREATED);
+        return JsonResponse::create($data,Response::HTTP_CREATED);
     }
 
 

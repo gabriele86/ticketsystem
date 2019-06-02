@@ -31,12 +31,14 @@ final class TicketService
         $ticket->setStatus(1);
 
 
-        /**
-         * TODO: Add event
-         *
-         */
-
-        return $ticket;
+        try {
+            //dd($ticket);
+            $this->ticketRepository->createTicket($ticket);
+            return $ticket;
+        } catch (\Throwable $th) {
+            
+        }
+        
 
     }
 

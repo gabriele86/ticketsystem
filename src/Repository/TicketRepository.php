@@ -50,12 +50,12 @@ class TicketRepository extends ServiceEntityRepository implements ITicketReposit
     }
     */
 
-    public function createTicket(Ticket $ticket) : Ticket
+    public function createTicket(Ticket $ticket) : void
     {
         $this->_em->persist($ticket);
         $this->_em->flush();
 
-        return $ticket;
+        //return $ticket;
 
     }
 

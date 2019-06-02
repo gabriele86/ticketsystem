@@ -43,5 +43,6 @@ security:
             anonymous: true
 
         main:
+            pattern: /
             anonymous: true
 
